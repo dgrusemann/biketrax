@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Bike Paths</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Datetime</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @bike_paths.each do |bike_path| %>
+      <tr>
+        <td><%= bike_path.name %></td>
+        <td><%= bike_path.datetime %></td>
+        <td><%= link_to 'Show', bike_path %></td>
+        <td><%= link_to 'Edit', edit_bike_path_path(bike_path) %></td>
+        <td><%= link_to 'Destroy', bike_path, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Bike path', new_bike_path_path %>

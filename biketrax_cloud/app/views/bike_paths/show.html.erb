@@ -1,0 +1,16 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @bike_path.name %>
+</p>
+
+<p>
+  <strong>Datetime:</strong>
+  <%= @bike_path.datetime %>
+</p>
+
+<%= link_to 'Edit', edit_bike_path_path(@bike_path) %> |
+<%= link_to 'Back', bike_paths_path %>
+
+<div id="map_canvas" style="height: 600px;"></div>

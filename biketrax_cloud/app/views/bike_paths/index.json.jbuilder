@@ -1,0 +1,1 @@
+json.array! @bike_paths, partial: 'bike_paths/bike_path', as: :bike_path

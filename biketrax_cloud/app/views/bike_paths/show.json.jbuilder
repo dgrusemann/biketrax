@@ -1,0 +1,1 @@
+json.partial! "bike_paths/bike_path", bike_path: @bike_path

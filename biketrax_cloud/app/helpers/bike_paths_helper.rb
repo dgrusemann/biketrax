@@ -1,0 +1,2 @@
+module BikePathsHelper
+end

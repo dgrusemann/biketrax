@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resources :bike_paths do
     collection do
       get 'add_point'
+      post 'add_points'
     end
   end
 

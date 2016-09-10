@@ -1,5 +1,9 @@
+require 'csv'
+
 class BikePathsController < ApplicationController
   before_action :set_bike_path, only: [:show, :edit, :update, :destroy]
+
+  skip_before_filter :verify_authenticity_token, only: [:add_points]
 
   # GET /bike_paths
   # GET /bike_paths.json
@@ -24,6 +28,16 @@ class BikePathsController < ApplicationController
     point.latitude = params[:latitude]
     point.bike_path = BikePath.first
     point.save
+
+    render json: 'OK'
+  end
+
+  def add_points
+    csv_text = request.body.read
+    csv = CSV.parse(csv_text, :headers => true)
+    csv.each do |row|
+      puts row
+    end
 
     render json: 'OK'
   end

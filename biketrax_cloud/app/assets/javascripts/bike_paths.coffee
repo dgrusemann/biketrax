@@ -4,7 +4,6 @@
 
 gm_init = ->
   gm_center = new google.maps.LatLng(48, 12)
-#  11.66586
   gm_map_type = google.maps.MapTypeId.ROADMAP
   map_options = {center: gm_center, zoom: 8, mapTypeId: gm_map_type}
   new google.maps.Map(@map_canvas, map_options);
@@ -23,8 +22,6 @@ display_on_map = (data, map) ->
   path_options = {path: decoded_path, strokeColor: "#FF0000", strokeOpacity: 0.5, strokeWeight: 5}
   track_path = new google.maps.Polyline(path_options)
   track_path.setMap(map)
-
-  console.log(track_path)
   map.fitBounds(calc_bounds(track_path));
 
 load_track = (id, map) ->

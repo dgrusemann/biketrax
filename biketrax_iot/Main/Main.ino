@@ -57,6 +57,7 @@ void setup()
 
   Cache_initDrive();
   Acc_init();
+  Hall_setup();
 
 #ifdef DEBUG
   //acc-gyro info
@@ -83,6 +84,8 @@ void loop()
     delay(100);
     errorLed(0);
   }
+
+  Hall_read();
 
   if (millis() > 10000) {
     Cache_sendToBackend();

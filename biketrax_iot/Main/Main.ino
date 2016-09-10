@@ -53,7 +53,7 @@ void setup()
 
 void loop()
 {
-  if (millis() - tAcc > thresAcc) {
+  if (millis() - tAcc > thresAcc && 0) {
     Acc_save();
 
 #ifdef DEBUG
@@ -63,7 +63,7 @@ void loop()
     tAcc = millis();
   }
 
-  if (millis() - tGps > thresGps) {
+  if (millis() - tGps > thresGps && 0) {
     Gps_save();
     Gps_display();
 
@@ -83,8 +83,8 @@ void loop()
   }
 
   if (millis() > 10000) {
-    Cache_sendToBackend();
-    Cache_standby();
+    //Cache_sendToBackend();
+    //Cache_standby();
   }
 }
 

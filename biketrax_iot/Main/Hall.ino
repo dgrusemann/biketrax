@@ -1,12 +1,13 @@
 const int hall = A0;
-const int changeAvg = 0.08;
+const int changeAvg = 0.05;
 int hallAvg = 0;
 int Hall_count = 0;
 bool hallDetected = false;
 
 void Hall_setup() {
   pinMode(hall, INPUT);
-  Hall_calcAvg();
+  //Hall_calcAvg();
+  hallAvg = 530;
 }
 
 void Hall_calcValues(){
@@ -15,12 +16,14 @@ void Hall_calcValues(){
 
 void Hall_read() {
   int sum = 0;
-  int avg = 20;
+  int avg = 10;
   for (int i = 0; i < avg; i++) {
     int value = analogRead(hall);
     sum += value;
   }
   sum = sum / avg;
+  Serial.print("Hall_sum: ");
+  Serial.println(sum);
   if (sum - hallAvg > hallAvg * changeAvg && !hallDetected) {
     hallDetected = true;
     Hall_count++;

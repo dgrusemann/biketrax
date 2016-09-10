@@ -9,16 +9,16 @@ const char* endpoint = "/bike_paths/add_point";
 void Network_connectToWifi() {
   Serial.print("Connecting to ");
   Serial.println(ssid);
-  
+
   WiFi.begin(ssid, password);
-  
+
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
 
   Serial.println("");
-  Serial.println("WiFi connected");  
+  Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 }
@@ -27,7 +27,7 @@ void Network_sendData(char* latitude, char* longitude) {
 
   Serial.print("connecting to ");
   Serial.println(host);
-  
+
   // Use WiFiClient class to create TCP connections
   WiFiClient client;
   const int httpPort = 3000;
@@ -35,20 +35,20 @@ void Network_sendData(char* latitude, char* longitude) {
     Serial.println("connection failed");
     return;
   }
-  
+
   // We now create a URI for the request
   String url = endpoint;
   url += "?latitude=";
   url += latitude;
   url += "&longitude=";
   url += longitude;
-  
+
   Serial.print("Requesting URL: ");
   Serial.println(url);
-  
+
   // This will send the request to the server
   client.print(String("GET ") + url + " HTTP/1.1\r\n" +
-               "Host: " + host + "\r\n" + 
+               "Host: " + host + "\r\n" +
                "Connection: close\r\n\r\n");
   unsigned long timeout = millis();
   while (client.available() == 0) {
@@ -58,13 +58,13 @@ void Network_sendData(char* latitude, char* longitude) {
       return;
     }
   }
-  
+
   // Read all the lines of the reply from server and print them to Serial
-  while(client.available()){
+  while (client.available()) {
     String line = client.readStringUntil('\r');
     Serial.print(line);
   }
-  
+
   Serial.println();
   Serial.println("closing connection");
 }

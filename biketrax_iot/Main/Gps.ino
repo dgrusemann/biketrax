@@ -12,7 +12,7 @@ void Gps_init() {
   ss.begin(GPSBaud);
 }
 
-void saveGps() {
+void Gps_save() {
   if (ss.available() > 0) {
     if (gps.encode(ss.read())) {
       if (gps.location.isValid())
@@ -107,47 +107,7 @@ void saveGps() {
   }
 }
 
-void displayGpsSensorDetails()
-{
-#ifdef DEBUG
-  sensor_t accel, mag, gyro, temp;
-  lsm.getSensor(&accel, &mag, &gyro, &temp);
-
-  Serial.println(F("------------------------------------"));
-  Serial.print  (F("Sensor:       ")); Serial.println(accel.name);
-  Serial.print  (F("Driver Ver:   ")); Serial.println(accel.version);
-  Serial.print  (F("Unique ID:    ")); Serial.println(accel.sensor_id);
-  Serial.print  (F("Max Value:    ")); Serial.print(accel.max_value); Serial.println(F(" m/s^2"));
-  Serial.print  (F("Min Value:    ")); Serial.print(accel.min_value); Serial.println(F(" m/s^2"));
-  Serial.print  (F("Resolution:   ")); Serial.print(accel.resolution); Serial.println(F(" m/s^2"));
-  Serial.println(F("------------------------------------"));
-  Serial.println(F(""));
-
-  Serial.println(F("------------------------------------"));
-  Serial.print  (F("Sensor:       ")); Serial.println(mag.name);
-  Serial.print  (F("Driver Ver:   ")); Serial.println(mag.version);
-  Serial.print  (F("Unique ID:    ")); Serial.println(mag.sensor_id);
-  Serial.print  (F("Max Value:    ")); Serial.print(mag.max_value); Serial.println(F(" uT"));
-  Serial.print  (F("Min Value:    ")); Serial.print(mag.min_value); Serial.println(F(" uT"));
-  Serial.print  (F("Resolution:   ")); Serial.print(mag.resolution); Serial.println(F(" uT"));
-  Serial.println(F("------------------------------------"));
-  Serial.println(F(""));
-
-  Serial.println(F("------------------------------------"));
-  Serial.print  (F("Sensor:       ")); Serial.println(gyro.name);
-  Serial.print  (F("Driver Ver:   ")); Serial.println(gyro.version);
-  Serial.print  (F("Unique ID:    ")); Serial.println(gyro.sensor_id);
-  Serial.print  (F("Max Value:    ")); Serial.print(gyro.max_value); Serial.println(F(" rad/s"));
-  Serial.print  (F("Min Value:    ")); Serial.print(gyro.min_value); Serial.println(F(" rad/s"));
-  Serial.print  (F("Resolution:   ")); Serial.print(gyro.resolution); Serial.println(F(" rad/s"));
-  Serial.println(F("------------------------------------"));
-  Serial.println(F(""));
-
-  delay(500);
-#endif
-}
-
-void displayGps()
+void Gps_display()
 {
   Serial.print(F("Location: "));
   if (gps.location.isValid())

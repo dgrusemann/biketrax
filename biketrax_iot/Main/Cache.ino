@@ -1,4 +1,4 @@
-void Cache_initDrive() {
+void Cache_init() {
   // File mounting
   bool result = SPIFFS.begin();
   Serial.println("SPIFFS opened: " + result);
@@ -23,6 +23,10 @@ void Cache_initDrive() {
   } else {
     f = SPIFFS.open("/db.txt", "a+");
   }
+}
+
+void Cache_clear() {
+  SPIFFS.remove("/db.txt");
 }
 
 void Cache_sendToBackend() {

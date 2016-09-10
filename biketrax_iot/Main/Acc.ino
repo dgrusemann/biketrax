@@ -4,9 +4,11 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_LSM9DS0.h>
 
+//acc-gyro def:
+Adafruit_LSM9DS0 lsm = Adafruit_LSM9DS0(1000);  // Use I2C, ID #1000
+
 void Acc_init() {
-  //acc-gyro init:
-  Serial.println("acc-gyro init");
+  Serial.println(F("Acc init"));
   if (!lsm.begin())
   {
     /* There was a problem detecting the LSM9DS0 ... check your connections */
@@ -14,11 +16,12 @@ void Acc_init() {
     digitalWrite(8, HIGH);
     while (1);
   }
-  configureSensor();
+  Acc_configureSensor();
+  Acc_displaySensor();
   Serial.println(F("LSM9DS0 init successfull"));
 }
 
-void saveAcc() {
+void Acc_save() {
   //acc-gyro def:
   sensors_event_t accel, mag, gyro, temp;
   lsm.getEvent(&accel, &mag, &gyro, &temp);
@@ -46,7 +49,7 @@ void saveAcc() {
   f.println("");
 }
 
-void displayAcc() {
+void Acc_display() {
 
   //acc-gyro def:
   sensors_event_t accel, mag, gyro, temp;
@@ -75,7 +78,47 @@ void displayAcc() {
   delay(250);
 }
 
-void configureSensor()
+void Acc_displaySensor()
+{
+#ifdef DEBUG
+  sensor_t accel, mag, gyro, temp;
+  lsm.getSensor(&accel, &mag, &gyro, &temp);
+
+  Serial.println(F("------------------------------------"));
+  Serial.print  (F("Sensor:       ")); Serial.println(accel.name);
+  Serial.print  (F("Driver Ver:   ")); Serial.println(accel.version);
+  Serial.print  (F("Unique ID:    ")); Serial.println(accel.sensor_id);
+  Serial.print  (F("Max Value:    ")); Serial.print(accel.max_value); Serial.println(F(" m/s^2"));
+  Serial.print  (F("Min Value:    ")); Serial.print(accel.min_value); Serial.println(F(" m/s^2"));
+  Serial.print  (F("Resolution:   ")); Serial.print(accel.resolution); Serial.println(F(" m/s^2"));
+  Serial.println(F("------------------------------------"));
+  Serial.println(F(""));
+
+  Serial.println(F("------------------------------------"));
+  Serial.print  (F("Sensor:       ")); Serial.println(mag.name);
+  Serial.print  (F("Driver Ver:   ")); Serial.println(mag.version);
+  Serial.print  (F("Unique ID:    ")); Serial.println(mag.sensor_id);
+  Serial.print  (F("Max Value:    ")); Serial.print(mag.max_value); Serial.println(F(" uT"));
+  Serial.print  (F("Min Value:    ")); Serial.print(mag.min_value); Serial.println(F(" uT"));
+  Serial.print  (F("Resolution:   ")); Serial.print(mag.resolution); Serial.println(F(" uT"));
+  Serial.println(F("------------------------------------"));
+  Serial.println(F(""));
+
+  Serial.println(F("------------------------------------"));
+  Serial.print  (F("Sensor:       ")); Serial.println(gyro.name);
+  Serial.print  (F("Driver Ver:   ")); Serial.println(gyro.version);
+  Serial.print  (F("Unique ID:    ")); Serial.println(gyro.sensor_id);
+  Serial.print  (F("Max Value:    ")); Serial.print(gyro.max_value); Serial.println(F(" rad/s"));
+  Serial.print  (F("Min Value:    ")); Serial.print(gyro.min_value); Serial.println(F(" rad/s"));
+  Serial.print  (F("Resolution:   ")); Serial.print(gyro.resolution); Serial.println(F(" rad/s"));
+  Serial.println(F("------------------------------------"));
+  Serial.println(F(""));
+
+  delay(500);
+#endif
+}
+
+void Acc_configureSensor()
 {
   // 1.) Set the accelerometer range
   lsm.setupAccel(lsm.LSM9DS0_ACCELRANGE_2G);

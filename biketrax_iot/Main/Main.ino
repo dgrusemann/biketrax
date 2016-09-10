@@ -8,34 +8,16 @@
 
 */
 
-#include <Adafruit_Sensor.h>
-#include <Adafruit_LSM9DS0.h>
+#define DEBUG 1
+
 //file read and write
 #include "FS.h"
 
 File f;
 
-//acc-gyro def:
-Adafruit_LSM9DS0 lsm = Adafruit_LSM9DS0(1000);  // Use I2C, ID #1000
+void Acc_display();
+void Acc_save();
 
-//acc-gyro functions:
-void configureSensor();
-void displayAcc();
-void saveAcc();
-
-#define DEBUG
-
-//general functions:
-void initDrive();
-void sendToBackend();
-void standby();
-
-//gps functions:
-void displayGpsSensordDetails();
-void displayGps();
-void saveGps();
-
-long t = 0;
 long tAcc = 0;
 long tGps = 0;
 
@@ -45,57 +27,55 @@ int thresGps = 500; //ms
 bool emptyDate = true;
 bool emptyTime = true;
 
-void setup()
-{
+void App_init() {
 #ifndef ESP8266
   while (!Serial);     // will pause Zero, Leonardo, etc until serial console opens
 #endif
   Serial.begin(9600);
   Serial.println("------------------------");
-  Serial.println("bike.trax SW starting..........");
+  Serial.println("bike.trax starting...");
   Serial.println("------------------------");
+}
 
-  Cache_initDrive();
+void setup()
+{
+  App_init();
+
+  Gps_init();
+  //  Cache_init();
   Acc_init();
-  Hall_setup();
-
-#ifdef DEBUG
-  //acc-gyro info
-  displayGpsSensorDetails();
-#endif
+  //  Hall_setup();
 }
 
 void loop()
 {
-  t = millis();
-
-  //#ifndef DEBUG
   if (millis() - tAcc > thresAcc) {
-    //TODO: save data to file here
-    saveAcc();
-    displayAcc();
+    Acc_save();
+
+#ifdef DEBUG
+    Acc_display();
+#endif
+
     tAcc = millis();
   }
+
   if (millis() - tGps > thresGps) {
-    saveGps();
-    displayGps();
+    Gps_save();
+    Gps_display();
+
     tGps = millis();
     errorLed(1);
     delay(100);
     errorLed(0);
   }
 
-  Hall_read();
+  //  Hall_read();
 
   if (millis() > 10000) {
-    Cache_sendToBackend();
-    Cache_standby();
+    //    Cache_sendToBackend();
+    //Cache_clear();
+    //Cache_standby();
   }
-
-  //#else
-  
-  
-  //#endif
 }
 
 void errorLed(bool i) {

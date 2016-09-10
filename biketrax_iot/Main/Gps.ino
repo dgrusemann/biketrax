@@ -1,16 +1,34 @@
-//gps imports
 #include <TinyGPS++.h>
 #include <SoftwareSerial.h>
 
-//gps def:
 static const int RXPin = 12, TXPin = 13;
 static const uint32_t GPSBaud = 9600;
+
+long tGps = 0;
+int thresGps = 500; //ms
+
 TinyGPSPlus gps;
 SoftwareSerial ss(RXPin, TXPin);
 
 void Gps_init() {
   ss.begin(GPSBaud);
 }
+
+void Gps_loop() {
+  if (millis() - tGps > thresGps) {
+
+#ifdef SAVE_DATA
+    Gps_save();
+#endif
+
+#ifdef DEBUG
+    Gps_display();
+#endif
+
+    tGps = millis();
+  }
+}
+
 
 void Gps_save() {
   if (ss.available() > 0) {

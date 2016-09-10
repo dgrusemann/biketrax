@@ -1,12 +1,15 @@
 /*
  * acc sensor integrated
+ * gps integrated
  * 
  * open:
- * - gps
- * - wifi
+ * - wifi GRUSI
  * - write file
  * 
  */
+
+//file read and write
+#include "FS.h"
 
 //acc-gyro imports
 #include <SPI.h>
@@ -19,16 +22,23 @@
 #include <SoftwareSerial.h>
 
 #define DEBUG
+
+//general functions:
+void initDrive();
+void sendToBackend();
+void standby();
+
 //acc-gyro functions:
-void displayGpsSensordDetails();
 void configureSensor();
 void displayAcc();
 void saveAcc();
 
 //gps functions:
+void displayGpsSensordDetails();
 void displayGps();
 void saveGps();
 
+File f;
 long t = 0;
 long tAcc = 0;
 long tGps = 0;
@@ -42,9 +52,7 @@ Adafruit_LSM9DS0 lsm = Adafruit_LSM9DS0(1000);  // Use I2C, ID #1000
 //gps def:
 static const int RXPin = 12, TXPin = 13;
 static const uint32_t GPSBaud = 9600;
-// The TinyGPS++ object
 TinyGPSPlus gps;
-// The serial connection to the GPS device
 SoftwareSerial ss(RXPin, TXPin);
 
 
@@ -57,7 +65,9 @@ void setup()
   Serial.println("------------------------");
   Serial.println("bike.trax SW starting..........");
   Serial.println("------------------------");
-    
+
+  initDrive();
+  
   //acc-gyro init:
   Serial.println("acc-gyro init");
   if(!lsm.begin())
@@ -94,17 +104,70 @@ void loop()
       if (gps.encode(ss.read())){
           saveGps();
           tGps = millis();
-          analogWrite(13,HIGH);
+          errorLed(1);
           delay(100);
-          analogWrite(13,LOW);
+          errorLed(0);
       }
     }
   }
- 
+
+ if (millis()>10000){
+    standby();
+ }
+  
 #else
   displayGps();
   displayAcc();
 #endif
+}
+
+void initDrive(){
+  // File mounting
+  bool result = SPIFFS.begin();
+  Serial.println("SPIFFS opened: " + result);
+
+  // this opens the file "db.txt" in read-mode
+  f = SPIFFS.open("/db.txt", "a+");
+  
+  if (!f) {
+    Serial.println("File doesn't exist yet. Creating it");
+    // open the file in append mode
+    f = SPIFFS.open("/db.txt", "a+");
+    if (!f) {
+      Serial.println("file creation failed");
+      for (int i=0; i<10;i++){
+      errorLed(1);
+      delay(100);
+      errorLed(0);
+      delay(100);
+      }
+      while(1);
+    }
+  } else {
+      f = SPIFFS.open("/db.txt", "a+");
+  }
+}
+
+void sendToBackend(){
+  while(f.available()) {
+  //Lets read line by line from the file
+  String line = f.readStringUntil('\n');
+  //TODO send line to backend here  
+  }
+}
+
+void errorLed(bool i){
+  if (i){
+      analogWrite(13,HIGH);
+  } else {
+      analogWrite(13,LOW);
+  }
+}
+
+void standby(){
+    f.close();
+    Serial.println("file closed, shutdown");
+    errorLed(1);
 }
 
 void saveAcc(){

@@ -38,9 +38,12 @@ void saveGps();
 long t = 0;
 long tAcc = 0;
 long tGps = 0;
+long tHall = 0;
 
 int thresAcc = 500; //ms
 int thresGps = 500; //ms
+int thresHallRead = 100 //ms
+int thresHall = 5000; /ms
 
 bool emptyDate = true;
 bool emptyTime = true;
@@ -81,11 +84,18 @@ void loop()
     displayGps();
     tGps = millis();
     errorLed(1);
-    delay(100);
     errorLed(0);
   }
 
-  Hall_read();
+  if(millis() - tHallRead > thresHallRead) {
+      Hall_read();
+      tHallRead = millis();
+  }
+  if(millis() - tHall > thresHall){
+    tHall = millis();
+    Hall_calcValues();
+    Hall_saveHall();
+  }
 
   if (millis() > 10000) {
     Cache_sendToBackend();

@@ -1,5 +1,5 @@
 const int hall = A0;
-int hall_value= 0;
+int hall_value = 0;
 
 void setup() {
   pinMode(hall, INPUT);

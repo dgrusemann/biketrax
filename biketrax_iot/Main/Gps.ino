@@ -142,8 +142,6 @@ void displayGpsSensorDetails()
   Serial.print  (F("Resolution:   ")); Serial.print(gyro.resolution); Serial.println(F(" rad/s"));
   Serial.println(F("------------------------------------"));
   Serial.println(F(""));
-
-  delay(500);
 #endif
 }
 

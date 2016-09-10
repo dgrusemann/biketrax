@@ -74,8 +74,6 @@ void Acc_display() {
   Serial.print("Temp: "); Serial.print(temp.temperature); Serial.println(" *C");
 
   Serial.println("**********************\n");
-
-  delay(250);
 }
 
 void Acc_displaySensor()

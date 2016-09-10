@@ -11,8 +11,8 @@ Adafruit_LSM9DS0 lsm = Adafruit_LSM9DS0(1000);  // Use I2C, ID #1000
 void displaySensorDetails(void)
 {
 #ifdef DEBUG
-  sensor_t accel, mag, gyro;  
-  lsm.getSensor(&accel, &mag, &gyro);
+  sensor_t accel, mag, gyro, temp;  
+  lsm.getSensor(&accel, &mag, &gyro, &temp);
 
   Serial.println(F("------------------------------------"));
   Serial.print  (F("Sensor:       ")); Serial.println(accel.name);
@@ -117,8 +117,8 @@ void setup(void)
 void loop(void) 
 {  
   /* Get a new sensor event */ 
-  sensors_event_t accel, mag, gyro;
-  lsm.getEvent(&accel, &mag, &gyro); 
+  sensors_event_t accel, mag, gyro, temp;
+  lsm.getEvent(&accel, &mag, &gyro, &temp); 
   
 #ifndef DEBUG
  
@@ -138,9 +138,6 @@ void loop(void)
   Serial.print("Gyro  X: "); Serial.print(gyro.gyro.x); Serial.print(" ");
   Serial.print("  \tY: "); Serial.print(gyro.gyro.y);       Serial.print(" ");
   Serial.print("  \tZ: "); Serial.print(gyro.gyro.z);     Serial.println("  \tdps");
-
-  // print out temperature data
-  Serial.print("Temp: "); Serial.print(temp.temperature); Serial.println(" *C");
 
   Serial.println("**********************\n");
 

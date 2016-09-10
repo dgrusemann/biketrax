@@ -20,7 +20,7 @@
 
 #define DEBUG
 //acc-gyro functions:
-void displaySensordDetails();
+void displayGpsSensordDetails();
 void configureSensor();
 void displayAcc();
 void saveAcc();
@@ -75,17 +75,13 @@ void setup()
   
 #ifdef DEBUG
   //acc-gyro info
-  displaySensorDetails();
+  displayGpsSensorDetails();
 #endif
 }
 
 void loop() 
 {  
   t = millis();
-  
-//acc-gyro def:
-  sensors_event_t accel, mag, gyro;
-  lsm.getEvent(&accel, &mag, &gyro); 
   
 #ifndef DEBUG
   if (millis()-tAcc > thresAcc){
@@ -112,6 +108,10 @@ void loop()
 }
 
 void saveAcc(){
+  //acc-gyro def:
+  sensors_event_t accel, mag, gyro, temp;
+  lsm.getEvent(&accel, &mag, &gyro, &temp);
+  
   Serial.print(accel.acceleration.x);
   Serial.print(accel.acceleration.y);
   Serial.print(accel.acceleration.z);
@@ -179,6 +179,11 @@ void saveGps(){
 }
 
 void displayAcc() {
+
+  //acc-gyro def:
+  sensors_event_t accel, mag, gyro, temp;
+  lsm.getEvent(&accel, &mag, &gyro, &temp);
+  
     // print out accelleration data
   Serial.print("Accel X: "); Serial.print(accel.acceleration.x); Serial.print(" ");
   Serial.print("  \tY: "); Serial.print(accel.acceleration.y);       Serial.print(" ");
@@ -202,11 +207,11 @@ void displayAcc() {
   delay(250);
 }
 
-void displayGps()
+void displayGpsSensorDetails()
 {
 #ifdef DEBUG
-  sensor_t accel, mag, gyro;  
-  lsm.getSensor(&accel, &mag, &gyro);
+  sensor_t accel, mag, gyro, temp;  
+  lsm.getSensor(&accel, &mag, &gyro, &temp);
 
   Serial.println(F("------------------------------------"));
   Serial.print  (F("Sensor:       ")); Serial.println(accel.name);

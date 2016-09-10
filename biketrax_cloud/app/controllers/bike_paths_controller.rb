@@ -18,6 +18,16 @@ class BikePathsController < ApplicationController
     end
   end
 
+  def add_point
+    point = Point.new
+    point.longitude = params[:longitude]
+    point.latitude = params[:latitude]
+    point.bike_path = BikePath.first
+    point.save
+
+    render json: 'OK'
+  end
+
   # GET /bike_paths/new
   def new
     @bike_path = BikePath.new

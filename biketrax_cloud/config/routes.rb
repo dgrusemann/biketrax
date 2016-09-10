@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
-  resources :bike_paths
+  resources :bike_paths do
+    collection do
+      get 'add_point'
+    end
+  end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

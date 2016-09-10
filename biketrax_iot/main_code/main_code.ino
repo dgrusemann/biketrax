@@ -46,6 +46,9 @@ long tGps = 0;
 int thresAcc = 500; //ms
 int thresGps = 500; //ms
 
+bool emptyDate = true;
+bool emptyTime = true;
+
 //acc-gyro def:
 Adafruit_LSM9DS0 lsm = Adafruit_LSM9DS0(1000);  // Use I2C, ID #1000
 
@@ -93,7 +96,7 @@ void loop()
 {  
   t = millis();
   
-#ifndef DEBUG
+//#ifndef DEBUG
   if (millis()-tAcc > thresAcc){
     //TODO: save data to file here
     saveAcc();
@@ -112,13 +115,14 @@ void loop()
   }
 
  if (millis()>10000){
+    sendToBackend();
     standby();
  }
   
-#else
+//#else
   displayGps();
   displayAcc();
-#endif
+//#endif
 }
 
 void initDrive(){
@@ -150,94 +154,148 @@ void initDrive(){
 
 void sendToBackend(){
   while(f.available()) {
-  //Lets read line by line from the file
-  String line = f.readStringUntil('\n');
-  //TODO send line to backend here  
+    //Lets read line by line from the file
+    String line = f.readStringUntil('\n');
+    //TODO send line to backend here  
+    Serial.println(line);
   }
 }
 
 void errorLed(bool i){
   if (i){
-      analogWrite(13,HIGH);
+      analogWrite(15,HIGH);
   } else {
-      analogWrite(13,LOW);
+      analogWrite(15,LOW);
   }
 }
 
 void standby(){
     f.close();
     Serial.println("file closed, shutdown");
-    errorLed(1);
+    while(1){
+          errorLed(1);
+          delay(1000);
+          errorLed(0);
+          delay(1000);
+    }    
 }
 
 void saveAcc(){
   //acc-gyro def:
   sensors_event_t accel, mag, gyro, temp;
   lsm.getEvent(&accel, &mag, &gyro, &temp);
-  
-  Serial.print(accel.acceleration.x);
-  Serial.print(accel.acceleration.y);
-  Serial.print(accel.acceleration.z);
 
-  // print out magnetometer data
-  Serial.print(mag.magnetic.x);
-  Serial.print(mag.magnetic.y);
-  Serial.print(mag.magnetic.z);
-  
-  // print out gyroscopic data
-  Serial.print(gyro.gyro.x);
-  Serial.print(gyro.gyro.y);
-  Serial.print(gyro.gyro.z);
+  f.print(millis());
+  f.print("\t");
+  f.print("acc");
+  f.print("\t");
+  f.print(accel.acceleration.x);
+  f.print("\t");
+  f.print(accel.acceleration.y);
+  f.print("\t");
+  f.print(accel.acceleration.z);
+  f.println("");
+
+  f.print(millis());
+  f.print("\t");
+  f.print("gyro");
+  f.print("\t");
+  f.print(gyro.gyro.x);
+  f.print("\t");
+  f.print(gyro.gyro.y);
+  f.print("\t");
+  f.print(gyro.gyro.z);
+  f.println("");
 }
 
 void saveGps(){
   if (gps.location.isValid())
-  {
-    Serial.print(gps.location.lat(), 6);
-    Serial.print(gps.location.lng(), 6);
+  {  
+    f.print(millis());
+    f.print("\t");
+    f.print("gps");
+    f.print("\t");
+    f.print(gps.location.lat(), 6);
+    f.print("\t");
+    f.print(gps.location.lng(), 6);
+    f.println("");
   } else {
-    //save default value -1000
+    f.print(millis());
+    f.print("\t");
+    f.print("gps");
+    f.print("\t");
+    f.print(-1000);
+    f.print("\t");
+    f.print(-1000);
+    f.println("");
   }
 
-  if (gps.date.isValid())
+  if (gps.date.isValid() && emptyDate)
   {
-    Serial.print(gps.date.month());
-    Serial.print(gps.date.day());
-    Serial.print(gps.date.year());
-  }
-  else
-  {
-    //save default values
+    f.print(millis());
+    f.print("\t");
+    f.print("date");
+    f.print("\t");
+    f.print(gps.date.year());
+    f.print("\t");
+    f.print(gps.date.month());
+    f.print("\t");
+    f.print(gps.date.day());
+    f.println("");
+    emptyDate = false;
   }
 
-  if (gps.time.isValid())
+  if (gps.time.isValid() && emptyTime)
   {
-    Serial.print(gps.time.hour());
-    Serial.print(gps.time.minute());
-    Serial.print(gps.time.second());
-    Serial.print(gps.time.centisecond());
-  }
-  else
-  {
-    //save default value
+    f.print(millis());
+    f.print("\t");
+    f.print("time");
+    f.print("\t");
+    f.print(gps.time.hour());
+    f.print("\t");
+    f.print(gps.time.minute());
+    f.print("\t");
+    f.print(gps.time.second());
+    f.println("");
+    emptyTime = false;
   }
 
   if (gps.altitude.isValid())
   {
-    Serial.print(gps.altitude.meters());
+    f.print(millis());
+    f.print("\t");
+    f.print("alt");
+    f.print("\t");
+    f.print(gps.altitude.meters());
+    f.println("");
   }
   else
   {
-    //save default value -1000
+    f.print(millis());
+    f.print("\t");
+    f.print("alt");
+    f.print("\t");
+    f.print(-1000);
+    f.println("");
   }
 
   if (gps.speed.isValid())
   {
-    Serial.print(gps.speed.kmph());
+    f.print(millis());
+    f.print("\t");
+    f.print("speed");
+    f.print("\t");
+    f.print(gps.speed.kmph());
+    f.println("");
   }
   else
   {
-    //save default value
+    f.print(millis());
+    f.print("\t");
+    f.print("speed");
+    f.print("\t");
+    f.print(-1000);
+    f.println("");
   }
 }
 

@@ -22,8 +22,8 @@ void Hall_read() {
     sum += value;
   }
   sum = sum / avg;
-  Serial.print("Hall_sum: ");
-  Serial.println(sum);
+  //Serial.print("Hall_sum: ");
+  //Serial.println(sum);
   if (sum - hallAvg > hallAvg * changeAvg && !hallDetected) {
     hallDetected = true;
     Hall_count++;
@@ -53,3 +53,10 @@ void Hall_saveHall() {
   f.print(Hall_distance);
   f.println("");
 }
+
+void Hall_display(){
+  Serial.print("Hall Distance: ");
+  Serial.print(Hall_distance);
+  Serial.println(" meter");
+}
+

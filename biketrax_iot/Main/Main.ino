@@ -43,12 +43,16 @@ void App_init() {
 
 void setup()
 {
+  errorLed(1);
+  
   App_init();
 
   Gps_init();
   Cache_init();
   Acc_init();
   Hall_setup();
+  
+  errorLed(0);
 }
 
 void loop()
@@ -80,6 +84,9 @@ void loop()
     tHall = millis();
     Hall_calcValues();
     Hall_saveHall();
+#ifdef DEBUG
+    Hall_display();
+#endif
   }
 
   if (millis() > 10000) {

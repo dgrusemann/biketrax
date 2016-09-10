@@ -53,7 +53,7 @@ void setup()
 
 void loop()
 {
-  if (millis() - tAcc > thresAcc && 0) {
+  if (millis() - tAcc > thresAcc) {
     Acc_save();
 
 #ifdef DEBUG
@@ -63,7 +63,7 @@ void loop()
     tAcc = millis();
   }
 
-  if (millis() - tGps > thresGps && 0) {
+  if (millis() - tGps > thresGps) {
     Gps_save();
     Gps_display();
 

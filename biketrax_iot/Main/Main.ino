@@ -1,5 +1,5 @@
 #define DEBUG
-//#define SAVE_DATA
+#define SAVE_DATA
 
 //file read and write
 #include "FS.h"
@@ -23,9 +23,7 @@ void setup()
   Acc_init();
   Gps_init();
   Hall_init();
-  Cache_init();
-
-  //  //  Cache_clear();
+  Cache_init(1);
 }
 
 void loop()
@@ -33,8 +31,9 @@ void loop()
   Acc_loop();
   Gps_loop();
   Hall_loop();
-  //  //  if (millis() > 10000) {
-  //  //    Cache_sendToBackend();
-  //  //    Cache_standby();
-  //  //  }
+
+  if (millis() > 120000) {
+    Cache_sendToBackend();
+    Cache_standby();
+  }
 }

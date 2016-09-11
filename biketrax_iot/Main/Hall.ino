@@ -1,5 +1,5 @@
 const int hall = A0;
-const int changeAvg = 0.05;
+const int changeAvg = 95;
 int hallAvg = 0;
 int Hall_count = 0;
 bool hallDetected = false;
@@ -7,7 +7,7 @@ bool hallDetected = false;
 void Hall_setup() {
   pinMode(hall, INPUT);
   //Hall_calcAvg();
-  hallAvg = 530;
+  hallAvg = 520;
 }
 
 void Hall_calcValues(){
@@ -22,9 +22,8 @@ void Hall_read() {
     sum += value;
   }
   sum = sum / avg;
-  //Serial.print("Hall_sum: ");
-  //Serial.println(sum);
-  if (sum - hallAvg > hallAvg * changeAvg && !hallDetected) {
+
+  if ((sum < (hallAvg * changeAvg/100)) && !hallDetected) {
     hallDetected = true;
     Hall_count++;
   }

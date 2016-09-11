@@ -33,7 +33,7 @@ void Acc_init() {
     while (1);
   }
   Acc_configureSensor();
-  Acc_displaySensor();
+  //Acc_displaySensor();
   Serial.println(F("LSM9DS0 init successfull"));
 }
 

@@ -20,12 +20,6 @@ int thresGps = 500; //ms
 void Gps_init()
 {
   ss.begin(GPSBaud);
-
-  Serial.println(F("DeviceExample.ino"));
-  Serial.println(F("A simple demonstration of TinyGPS++ with an attached GPS module"));
-  Serial.print(F("Testing TinyGPS++ library v. ")); Serial.println(TinyGPSPlus::libraryVersion());
-  Serial.println(F("by Mikal Hart"));
-  Serial.println();
 }
 
 void Gps_loop()

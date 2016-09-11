@@ -25,7 +25,7 @@ void setup()
   Acc_init();
   Gps_init();
   Hall_init();
-  Cache_init(1);
+  Cache_init(0);
 
   errorLed(0);
 }
@@ -36,7 +36,7 @@ void loop()
   Gps_loop();
   Hall_loop();
 
-  if (millis() > 60000) {
+  if (millis() > 120000) {
     Cache_sendToBackend();
     Cache_standby();
   }

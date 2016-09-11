@@ -1,8 +1,12 @@
-void Cache_init() {
+void Cache_init(boolean reset) {
   // File mounting
   bool result = SPIFFS.begin();
   Serial.println("SPIFFS opened: " + result);
 
+  if (reset) {
+    SPIFFS.remove("/db.txt");
+  }
+  
   // this opens the file "db.txt" in read-mode
   f = SPIFFS.open("/db.txt", "r");
 
@@ -25,10 +29,6 @@ void Cache_init() {
   }
 }
 
-void Cache_clear() {
-  SPIFFS.remove("/db.txt");
-}
-
 void Cache_sendToBackend() {
   f.seek(0, fs::SeekSet);
   while (f.available()) {
@@ -42,10 +42,5 @@ void Cache_sendToBackend() {
 void Cache_standby() {
   f.close();
   Serial.println("file closed, shutdown");
-  while (1) {
-    errorLed(1);
-    delay(1000);
-    errorLed(0);
-    delay(1000);
-  }
+  StatusLED_standby();
 }

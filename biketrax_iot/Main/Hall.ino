@@ -4,14 +4,35 @@ int hallAvg = 0;
 int Hall_count = 0;
 bool hallDetected = false;
 
-void Hall_setup() {
+long tHall = 0;
+long tHallRead = 0;
+
+int thresHallRead = 100; //ms
+int thresHall = 5000; //ms
+
+void Hall_init() {
   pinMode(hall, INPUT);
   //Hall_calcAvg();
   hallAvg = 520;
 }
 
-void Hall_calcValues(){
-    Hall_distance = WHEELLEN * Hall_count;
+void Hall_loop() {
+  if (millis() - tHallRead > thresHallRead) {
+    Hall_read();
+    tHallRead = millis();
+  }
+  if (millis() - tHall > thresHall) {
+    tHall = millis();
+    Hall_calcValues();
+    Hall_saveHall();
+#ifdef DEBUG
+    Hall_display();
+#endif
+  }
+}
+
+void Hall_calcValues() {
+  Hall_distance = WHEELLEN * Hall_count;
 }
 
 void Hall_read() {
@@ -53,7 +74,7 @@ void Hall_saveHall() {
   f.println("");
 }
 
-void Hall_display(){
+void Hall_display() {
   Serial.print("Hall Distance: ");
   Serial.print(Hall_distance);
   Serial.println(" meter");

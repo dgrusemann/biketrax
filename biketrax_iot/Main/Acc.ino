@@ -1,11 +1,27 @@
-//acc-gyro imports
-#include <SPI.h>
-#include <Wire.h>
-#include <Adafruit_Sensor.h>
+//#include <SPI.h>
+//#include <Wire.h>
+//#include <Adafruit_Sensor.h>
 #include <Adafruit_LSM9DS0.h>
 
-//acc-gyro def:
+long tAcc = 0;
+int thresAcc = 500; //ms
+
 Adafruit_LSM9DS0 lsm = Adafruit_LSM9DS0(1000);  // Use I2C, ID #1000
+
+void Acc_loop() {
+  if (millis() - tAcc > thresAcc) {
+
+#ifdef SAVE_DATA
+    Acc_save();
+#endif
+
+#ifdef DEBUG
+    Acc_display();
+#endif
+
+    tAcc = millis();
+  }
+}
 
 void Acc_init() {
   Serial.println(F("Acc init"));
@@ -22,7 +38,6 @@ void Acc_init() {
 }
 
 void Acc_save() {
-  //acc-gyro def:
   sensors_event_t accel, mag, gyro, temp;
   lsm.getEvent(&accel, &mag, &gyro, &temp);
 
@@ -50,8 +65,6 @@ void Acc_save() {
 }
 
 void Acc_display() {
-
-  //acc-gyro def:
   sensors_event_t accel, mag, gyro, temp;
   lsm.getEvent(&accel, &mag, &gyro, &temp);
 

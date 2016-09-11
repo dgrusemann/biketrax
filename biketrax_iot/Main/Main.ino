@@ -25,7 +25,7 @@ void setup()
   Acc_init();
   Gps_init();
   Hall_init();
-  Cache_init(0);
+  Cache_init(1);
 
   errorLed(0);
 }

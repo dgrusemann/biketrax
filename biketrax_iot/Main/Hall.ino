@@ -25,6 +25,9 @@ void Hall_loop() {
     tHall = millis();
     Hall_calcValues();
     Hall_saveHall();
+#ifdef DEBUG
+    Hall_display();
+#endif
   }
 }
 
@@ -72,7 +75,7 @@ void Hall_saveHall() {
   f.println("");
 }
 
-void Hall_display(){
+void Hall_display() {
   Serial.print("Hall Distance: ");
   Serial.print(Hall_distance);
   Serial.println(" meter");

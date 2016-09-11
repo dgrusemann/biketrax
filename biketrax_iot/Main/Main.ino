@@ -18,12 +18,16 @@ void App_init() {
 
 void setup()
 {
+  errorLed(1);
+
   App_init();
 
   Acc_init();
   Gps_init();
   Hall_init();
   Cache_init(0);
+
+  errorLed(0);
 }
 
 void loop()
